@@ -28,7 +28,7 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
+                    withDockerRegistry(credentialsId: 'docker') {
                         sh 'docker build -t youtube-clone .'
                         sh 'docker tag youtube-clone monsyster/youtube-clone:latest'
                         sh 'docker push monsyster/youtube-clone:latest'
@@ -37,10 +37,9 @@ pipeline {
             }
         }
 
-        stage('Deploy to container') {
+        stage('Deploy to Container') {
             steps {
                 script {
-                    // Clean up if container already exists
                     sh '''
                         docker rm -f youtube-clone || true
                         docker run -d --name youtube-clone -p 3000:3000 monsyster/youtube-clone:latest
